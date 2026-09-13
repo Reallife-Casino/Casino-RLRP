@@ -1,0 +1,2 @@
+import {NextResponse} from 'next/server';import {getSession} from '@/lib/session';import {db} from '@/lib/db';
+export async function POST(_:Request,{params}:{params:Promise<{id:string}>}){const a=await getSession();if(!a||a.role!=='ADMIN')return NextResponse.json({error:'Geen toegang.'},{status:403});const {id}=await params;const {error}=await db().rpc('admin_withdrawal_action',{p_admin:a.id,p_request:id,p_action:'APPROVE'});if(error)return NextResponse.json({error:'Actie mislukt.'},{status:400});return NextResponse.json({ok:true})}
